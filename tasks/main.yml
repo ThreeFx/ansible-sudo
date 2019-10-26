@@ -1,0 +1,26 @@
+---
+- name: Install sudo
+  become: True
+  apt:
+    name:
+      - sudo
+
+- name: Configure passwordless sudoers
+  become: True
+  lineinfile:
+    dest: /etc/sudoers
+    regexp: "^{{ item }}"
+    line: "{{ item }} ALL=(ALL) NOPASSWD:ALL"
+    state: present
+    validate: "visudo -cf %s"
+  with_items: "{{ sudo_passwordless_sudoers }}"
+
+- name: Configure passworded sudoers
+  become: True
+  lineinfile:
+    dest: /etc/sudoers
+    regexp: "^{{ item }}"
+    line: "{{ item }} ALL=(ALL) NOPASSWD:ALL"
+    state: present
+    validate: "visudo -cf %s"
+  with_items: "{{ sudo_passworded_sudoers }}"
